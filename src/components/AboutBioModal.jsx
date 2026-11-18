@@ -71,22 +71,6 @@ export default function AboutBioModal({ isOpen, onClose }) {
             </p>
           </div>
 
-          {/* Clean Technical Blueprint (Compact Studio Specs) */}
-          <div className="rounded-xl bg-zinc-50 dark:bg-[#16161b] border border-zinc-200/80 dark:border-white/5 p-3 space-y-2 text-[11px] font-mono">
-            <div className="flex items-center justify-between pb-1.5 border-b border-zinc-200/60 dark:border-white/5">
-              <span className="text-zinc-400 dark:text-zinc-500 uppercase tracking-wider text-[10px]">ENGINE</span>
-              <span className="text-zinc-800 dark:text-zinc-200 font-medium">Web Speech API + Kinetic Prompter</span>
-            </div>
-            <div className="flex items-center justify-between pb-1.5 border-b border-zinc-200/60 dark:border-white/5">
-              <span className="text-zinc-400 dark:text-zinc-500 uppercase tracking-wider text-[10px]">VISION</span>
-              <span className="text-zinc-800 dark:text-zinc-200 font-medium">Client-Side OCR (Tesseract) + Gemini</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-zinc-400 dark:text-zinc-500 uppercase tracking-wider text-[10px]">HOSTING</span>
-              <span className="text-emerald-600 dark:text-emerald-400 font-medium">100% Free • Cloudflare Pages</span>
-            </div>
-          </div>
-
           {/* Social Profiles Row */}
           <div className="flex flex-wrap items-center gap-2 pt-1">
             <a
