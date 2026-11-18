@@ -1,0 +1,179 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --sat: env(safe-area-inset-top, 0px);
+  --sar: env(safe-area-inset-right, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sal: env(safe-area-inset-left, 0px);
+}
+
+@layer base {
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
+    min-height: 100dvh;
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #e5e5ea;
+    color: #18181b;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  .dark body {
+    background-color: #09090b;
+    color: #f4f4f5;
+  }
+
+  .font-heading {
+    font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+  }
+
+  .font-mono {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+/* Glassmorphism cross-browser helper */
+@utility glassmorphic {
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+}
+
+/* Minimum 44px touch target on mobile */
+@utility touch-target {
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Custom sleek scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.12);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+/* Cross-Browser Studio Range Slider (Chromium, Firefox, Safari) */
+input[type="range"].melody-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: #e4e4e7;
+  height: 6px;
+  border-radius: 9999px;
+  outline: none;
+  cursor: pointer;
+  margin: 10px 0;
+  touch-action: pan-y;
+  transition: background-color 0.15s ease;
+}
+
+input[type="range"].melody-slider::-webkit-slider-runnable-track {
+  height: 6px;
+  background: #e4e4e7;
+  border-radius: 9999px;
+}
+
+input[type="range"].melody-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  margin-top: -6px;
+  border-radius: 50%;
+  background: #18181b;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+input[type="range"].melody-slider::-webkit-slider-thumb:hover,
+input[type="range"].melody-slider::-webkit-slider-thumb:active {
+  transform: scale(1.2);
+  background: #000000;
+}
+
+input[type="range"].melody-slider::-moz-range-track {
+  height: 6px;
+  background: #e4e4e7;
+  border-radius: 9999px;
+  border: none;
+}
+
+input[type="range"].melody-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #18181b;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+input[type="range"].melody-slider::-moz-range-thumb:hover,
+input[type="range"].melody-slider::-moz-range-thumb:active {
+  transform: scale(1.2);
+  background: #000000;
+}
+
+/* Dark Mode Range Sliders */
+.dark input[type="range"].melody-slider {
+  background: #27272a;
+}
+
+.dark input[type="range"].melody-slider::-webkit-slider-runnable-track {
+  background: #27272a;
+}
+
+.dark input[type="range"].melody-slider::-webkit-slider-thumb {
+  background: #f4f4f5;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.7);
+}
+
+.dark input[type="range"].melody-slider::-webkit-slider-thumb:hover,
+.dark input[type="range"].melody-slider::-webkit-slider-thumb:active {
+  background: #ffffff;
+}
+
+.dark input[type="range"].melody-slider::-moz-range-track {
+  background: #27272a;
+}
+
+.dark input[type="range"].melody-slider::-moz-range-thumb {
+  background: #f4f4f5;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.7);
+}
+
+.dark input[type="range"].melody-slider::-moz-range-thumb:hover,
+.dark input[type="range"].melody-slider::-moz-range-thumb:active {
+  background: #ffffff;
+}
