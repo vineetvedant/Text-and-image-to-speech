@@ -1,0 +1,21 @@
+# sshconnect Studio
+> Free client-side Text-to-Speech & Image-to-Voice synthesis studio.
+
+## Overview
+sshconnect Studio (https://sshconnect.space) is a high-performance, minimalist web application designed for real-time Text-to-Speech synthesis and Image-to-Voice OCR extraction. Developed by Vedant Singh.
+
+## Core Capabilities
+- **Text-to-Speech (TTS):** Real-time vocal modulation (speed, pitch, volume, intonation) using browser-native Web Speech APIs.
+- **Kinetic Teleprompter:** Synchronized real-time word highlighting following vocal cadence.
+- **Image-to-Voice (OCR):** Client-side optical character recognition via Tesseract.js to extract text from images, receipts, and photos.
+- **AI Scene Narration:** Optional multimodal image description powered by Google Gemini Vision.
+- **Acoustic Spectrum Visualizer:** 60 FPS HTML5 Canvas harmonic equalizer (Bars, Waves, Core).
+- **Multi-Language Locales:** 15+ international language dialects and phonetic sample scripts.
+- **100% Client-Side Privacy:** Operates entirely in the browser with zero audio tracking or server storage.
+
+## Creator & Links
+- **Developer:** Vedant Singh
+- **Portfolio:** https://sshconnect.space/
+- **GitHub Repository:** https://github.com/vineetvedant/Text-and-image-to-speech
+- **GitHub Profile:** https://github.com/vineetvedant
+- **LinkedIn Profile:** https://www.linkedin.com/in/vedant-singh-2550b2202/

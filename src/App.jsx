@@ -240,6 +240,9 @@ export default function App() {
 
       {/* Outer Studio Card Container */}
       <div className="w-full max-w-[1480px] bg-white dark:bg-[#121215] rounded-none sm:rounded-2xl lg:rounded-3xl border-0 sm:border border-zinc-300/80 dark:border-white/10 shadow-[0_30px_70px_-15px_rgba(0,0,0,0.14)] dark:shadow-[0_30px_90px_-10px_rgba(0,0,0,0.7)] overflow-hidden flex flex-col min-h-[100dvh] sm:min-h-[92vh] min-w-0 transition-colors duration-200">
+        {/* Semantic H1 for SEO & Accessibility */}
+        <h1 className="sr-only">sshconnect — Free Online Text to Speech & Image to Voice Studio</h1>
+
         {/* Studio Top Navigation Bar */}
         <StudioNavbar
           onNewProject={handlePlay}

@@ -1,0 +1,52 @@
+# robots.txt for sshconnect Studio
+# https://sshconnect.space/
+
+User-agent: *
+Allow: /
+
+# Standard Search Engine Crawlers
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: YandexBot
+Allow: /
+
+# AI Search & Generative Engine Crawlers (GEO)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Cohere-ai
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
+
+# Canonical XML Sitemap
+Sitemap: https://sshconnect.space/sitemap.xml

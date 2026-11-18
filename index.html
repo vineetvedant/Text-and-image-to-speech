@@ -2,20 +2,108 @@
 <html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236366f1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z'></path><path d='M19 10v2a7 7 0 0 1-14 0v-2'></path><line x1='12' x2='12' y1='19' y2='22'></line></svg>" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
+    
+    <!-- Primary SEO Meta Tags -->
+    <title>sshconnect — Free Online Text to Speech & Image to Voice Studio | OCR & Kinetic Teleprompter</title>
+    <meta name="title" content="sshconnect — Free Online Text to Speech & Image to Voice Studio | OCR & Kinetic Teleprompter" />
+    <meta name="description" content="Free online Text-to-Speech and Image-to-Voice studio. Convert text to realistic speech with pitch and speed modulation, extract text from images with client-side OCR, and read along with a kinetic teleprompter." />
+    <meta name="keywords" content="text to speech, image to voice, online ocr, free text to speech, kinetic teleprompter, web speech api, voice generator, speech synthesis, tesseract ocr, tts studio, audio visualizer, vedant singh, sshconnect" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="author" content="Vedant Singh" />
+    <meta name="creator" content="Vedant Singh" />
+    <meta name="publisher" content="sshconnect" />
+    <link rel="canonical" href="https://sshconnect.space/" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://sshconnect.space/" />
+    <meta property="og:site_name" content="sshconnect Studio" />
+    <meta property="og:title" content="sshconnect — Free Text to Speech & Image to Voice Studio" />
+    <meta property="og:description" content="Free client-side Text-to-Voice and Image-to-Voice studio with synchronized teleprompting, multi-language support, and privacy-first OCR." />
+    <meta property="og:image" content="https://sshconnect.space/hero.png" />
+    <meta property="og:image:alt" content="sshconnect Studio Interface" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://sshconnect.space/" />
+    <meta name="twitter:title" content="sshconnect — Free Text to Speech & Image to Voice Studio" />
+    <meta name="twitter:description" content="Free client-side Text-to-Voice and Image-to-Voice studio with synchronized teleprompting, multi-language support, and privacy-first OCR." />
+    <meta name="twitter:image" content="https://sshconnect.space/hero.png" />
+    <meta name="twitter:creator" content="@vineetvedant" />
+
+    <!-- Icons & PWA -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236366f1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z'></path><path d='M19 10v2a7 7 0 0 1-14 0v-2'></path><line x1='12' x2='12' y1='19' y2='22'></line></svg>" />
+    <link rel="manifest" href="/site.webmanifest" />
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="sshconnect" />
     <meta name="format-detection" content="telephone=no" />
-    <title>sshconnect — Studio Text & Image to Voice</title>
-    <meta name="description" content="Ultra-clean, production-ready Text-to-Voice and Image-to-Voice studio with client-side OCR and real-time audio visualization." />
-    
-    <!-- Preconnect Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Preconnect & DNS-Prefetch -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- Structured Data (Schema.org JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebApplication",
+          "@id": "https://sshconnect.space/#webapp",
+          "name": "sshconnect Studio",
+          "alternateName": ["sshconnect", "sshconnect Text-to-Voice and Image-to-Voice"],
+          "url": "https://sshconnect.space/",
+          "description": "High-fidelity client-side Text-to-Speech and Image-to-Voice studio with synchronized kinetic teleprompter and OCR text extraction.",
+          "applicationCategory": "MultimediaApplication",
+          "operatingSystem": "All (Modern Web Browser)",
+          "browserRequirements": "Requires Chrome, Edge, Safari, or Firefox with Web Speech API support",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD",
+            "availability": "https://schema.org/InStock"
+          },
+          "featureList": [
+            "Text to Speech synthesis with rate, pitch, and volume modulation",
+            "Synchronized kinetic word-level teleprompter highlighting",
+            "Image to Voice OCR text extraction via Tesseract.js",
+            "Optional Gemini Vision AI image scene description",
+            "Real-time 60 FPS acoustic harmonic audio spectrum visualizer",
+            "15+ global languages with dialect voice matching",
+            "100% private and client-side execution"
+          ],
+          "creator": {
+            "@type": "Person",
+            "@id": "https://sshconnect.space/#creator",
+            "name": "Vedant Singh",
+            "url": "https://sshconnect.space/",
+            "sameAs": [
+              "https://github.com/vineetvedant",
+              "https://www.linkedin.com/in/vedant-singh-2550b2202/"
+            ]
+          }
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://sshconnect.space/#website",
+          "url": "https://sshconnect.space/",
+          "name": "sshconnect",
+          "description": "Ultra-clean Text to Voice and Image to Voice studio.",
+          "publisher": {
+            "@id": "https://sshconnect.space/#creator"
+          }
+        }
+      ]
+    }
+    </script>
+
     <!-- Inline Theme Initializer (Prevents FOUC) -->
     <script>
       (function() {
@@ -32,7 +120,21 @@
     </script>
   </head>
   <body class="bg-[#e5e5ea] dark:bg-[#09090B] text-zinc-900 dark:text-zinc-100 antialiased selection:bg-indigo-500/30 selection:text-indigo-200 min-h-[100dvh] transition-colors duration-200">
-    <div id="root"></div>
+    <div id="root">
+      <main class="sr-only">
+        <h1>sshconnect — Free Online Text to Speech &amp; Image to Voice Studio</h1>
+        <p>Ultra-clean, production-ready web application for real-time Text-to-Voice synthesis, OCR image extraction, and kinetic teleprompting by Vedant Singh.</p>
+        <h2>Features</h2>
+        <ul>
+          <li>Browser-native Text to Speech with customizable speed, pitch, and volume.</li>
+          <li>Synchronized real-time kinetic word highlighter teleprompter.</li>
+          <li>Client-side optical character recognition (OCR) from images using Tesseract.js.</li>
+          <li>Multimodal AI scene descriptions via Google Gemini Vision.</li>
+          <li>Acoustic harmonic audio spectrum visualizer.</li>
+          <li>Multi-language support across 15+ international locales.</li>
+        </ul>
+      </main>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
