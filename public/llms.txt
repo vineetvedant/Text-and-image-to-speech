@@ -1,8 +1,8 @@
-# sshconnect Studio
+# Voice Studio by sshconnect
 > Free client-side Text-to-Speech & Image-to-Voice synthesis studio.
 
 ## Overview
-sshconnect Studio (https://sshconnect.space) is a high-performance, minimalist web application designed for real-time Text-to-Speech synthesis and Image-to-Voice OCR extraction. Developed by Vedant Singh.
+Voice Studio (https://voice.sshconnect.space/) is a high-performance, minimalist web application designed for real-time Text-to-Speech synthesis and Image-to-Voice OCR extraction. Developed by Vedant Singh.
 
 ## Core Capabilities
 - **Text-to-Speech (TTS):** Real-time vocal modulation (speed, pitch, volume, intonation) using browser-native Web Speech APIs.
@@ -14,6 +14,7 @@ sshconnect Studio (https://sshconnect.space) is a high-performance, minimalist w
 - **100% Client-Side Privacy:** Operates entirely in the browser with zero audio tracking or server storage.
 
 ## Creator & Links
+- **Application URL:** https://voice.sshconnect.space/
 - **Developer:** Vedant Singh
 - **Portfolio:** https://sshconnect.space/
 - **GitHub Repository:** https://github.com/vineetvedant/Text-and-image-to-speech

@@ -11,7 +11,6 @@ import {
   Camera,
   FileText
 } from 'lucide-react';
-import Tesseract from 'tesseract.js';
 import { SAMPLE_TEXT_PRESETS, generateSampleImage } from '../utils/samplePresets';
 import { describeImageWithGemini, getStoredGeminiKey } from '../utils/geminiApi';
 
@@ -70,6 +69,7 @@ export default function StudioTeleprompter({
     setErrorMsg('');
 
     try {
+      const { default: Tesseract } = await import('tesseract.js');
       const result = await Tesseract.recognize(target, ocrLanguage || 'eng', {
         logger: (m) => {
           if (m.status === 'recognizing text') {

@@ -7,6 +7,7 @@ import StudioFooter from './components/StudioFooter';
 import HistoryDrawer from './components/HistoryDrawer';
 import SettingsModal from './components/SettingsModal';
 import AboutBioModal from './components/AboutBioModal';
+import SeoContentSection from './components/SeoContentSection';
 import { speechController, unlockAudioContext } from './utils/speechSynthesis';
 import { SUPPORTED_LANGUAGES } from './utils/samplePresets';
 import { CheckCircle2, AlertTriangle } from 'lucide-react';
@@ -16,6 +17,45 @@ const THEME_STORAGE_KEY = 'sshconnect_theme';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('text'); // 'text' | 'image' | 'visualizer'
+
+  // Dynamic Routing & Deep Linking for Programmatic SEO
+  useEffect(() => {
+    const handleUrlRoute = () => {
+      const path = window.location.pathname.toLowerCase();
+      const hash = window.location.hash.toLowerCase();
+      if (path.includes('image') || hash.includes('image')) {
+        setActiveTab('image');
+      } else if (path.includes('teleprompter') || path.includes('visualizer') || hash.includes('teleprompter') || hash.includes('visualizer')) {
+        setActiveTab('visualizer');
+      } else if (path.includes('text') || hash.includes('text')) {
+        setActiveTab('text');
+      }
+    };
+
+    handleUrlRoute();
+    window.addEventListener('popstate', handleUrlRoute);
+    window.addEventListener('hashchange', handleUrlRoute);
+    return () => {
+      window.removeEventListener('popstate', handleUrlRoute);
+      window.removeEventListener('hashchange', handleUrlRoute);
+    };
+  }, []);
+
+  const handleSelectTab = useCallback((tab) => {
+    setActiveTab(tab);
+    try {
+      const routeMap = {
+        text: '/text-to-speech',
+        image: '/image-to-voice',
+        visualizer: '/teleprompter'
+      };
+      if (routeMap[tab] && window.location.pathname !== routeMap[tab]) {
+        window.history.replaceState(null, '', routeMap[tab]);
+      }
+    } catch {
+      // safe fallback
+    }
+  }, []);
   const [currentLanguage, setCurrentLanguage] = useState(SUPPORTED_LANGUAGES[0]);
   const [text, setText] = useState(SUPPORTED_LANGUAGES[0].sampleText);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
@@ -225,7 +265,7 @@ export default function App() {
   }, [text, selectedVoice, rate, pitch, volume, handleStop, addToHistory]);
 
   return (
-    <div className="min-h-[100dvh] w-full bg-[#e5e5ea] dark:bg-[#09090b] py-0 sm:py-3 lg:py-6 px-0 sm:px-3 lg:px-6 flex flex-col justify-center items-center font-sans antialiased overflow-x-hidden transition-colors duration-200">
+    <div className="min-h-[100dvh] w-full bg-[#e5e5ea] dark:bg-[#09090b] py-0 sm:py-3 lg:py-6 px-0 sm:px-3 lg:px-6 flex flex-col justify-start items-center font-sans antialiased overflow-x-hidden transition-colors duration-200">
       {/* Unsupported Browser Warning Fallback */}
       {!isSpeechSupported && (
         <div className="w-full max-w-[1480px] bg-amber-500 text-black px-4 py-2.5 text-xs font-semibold flex items-center justify-between gap-2 shadow-sm rounded-b-xl mb-2">
@@ -240,9 +280,6 @@ export default function App() {
 
       {/* Outer Studio Card Container */}
       <div className="w-full max-w-[1480px] bg-white dark:bg-[#121215] rounded-none sm:rounded-2xl lg:rounded-3xl border-0 sm:border border-zinc-300/80 dark:border-white/10 shadow-[0_30px_70px_-15px_rgba(0,0,0,0.14)] dark:shadow-[0_30px_90px_-10px_rgba(0,0,0,0.7)] overflow-hidden flex flex-col min-h-[100dvh] sm:min-h-[92vh] min-w-0 transition-colors duration-200">
-        {/* Semantic H1 for SEO & Accessibility */}
-        <h1 className="sr-only">sshconnect — Free Online Text to Speech & Image to Voice Studio</h1>
-
         {/* Studio Top Navigation Bar */}
         <StudioNavbar
           onNewProject={handlePlay}
@@ -250,7 +287,7 @@ export default function App() {
           currentLanguage={currentLanguage}
           onSelectLanguage={handleSelectLanguage}
           activeTab={activeTab}
-          onSelectTab={setActiveTab}
+          onSelectTab={handleSelectTab}
           onOpenSettings={() => setIsSettingsOpen(true)}
           onOpenBio={() => setIsBioOpen(true)}
           theme={theme}
@@ -302,6 +339,9 @@ export default function App() {
             onChangeVolume={setVolume}
           />
         </div>
+
+        {/* High-Intent On-Page SEO Section (Below the fold) */}
+        <SeoContentSection onSelectTab={handleSelectTab} />
 
         {/* Minimalist Studio Footer with Personal Branding */}
         <StudioFooter onOpenBio={() => setIsBioOpen(true)} />

@@ -1,10 +1,10 @@
-# robots.txt for sshconnect Studio
-# https://sshconnect.space/
+# robots.txt for Voice Studio
+# https://voice.sshconnect.space/
 
 User-agent: *
 Allow: /
 
-# Standard Search Engine Crawlers
+# Search Engine Crawlers
 User-agent: Googlebot
 Allow: /
 
@@ -49,5 +49,4 @@ User-agent: meta-externalagent
 Allow: /
 
 # Canonical XML Sitemap
-Sitemap: https://sshconnect.space/sitemap.xml
-
+Sitemap: https://voice.sshconnect.space/sitemap.xml
