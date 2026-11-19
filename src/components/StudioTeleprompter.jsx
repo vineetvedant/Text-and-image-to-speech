@@ -179,15 +179,6 @@ export default function StudioTeleprompter({
     else runOcr(dataUrl);
   };
 
-  // Quick preset pills from the screenshot
-  const presetPills = [
-    { label: '🤢 DISGUST', prompt: 'With palpable disgust and grim shuddering disbelief: ' },
-    { label: '🥺 DISAPPOINTMENT', prompt: 'With soft heartbreak, quiet resignation, and melancholic sigh: ' },
-    { label: '🎙️ PODCAST', text: SAMPLE_TEXT_PRESETS[0].text },
-    { label: '✨ STORY', text: SAMPLE_TEXT_PRESETS[2].text },
-    { label: '🧘 MINDFUL', text: SAMPLE_TEXT_PRESETS[4].text },
-  ];
-
   const handleEnhanceScript = () => {
     const nextPreset = SAMPLE_TEXT_PRESETS[Math.floor(Math.random() * SAMPLE_TEXT_PRESETS.length)];
     onChangeText(nextPreset.text);
@@ -485,47 +476,20 @@ export default function StudioTeleprompter({
           />
         </form>
 
-        {/* Bottom row: Preset pills + Action buttons */}
+        {/* Bottom row: Action buttons */}
         <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-zinc-100 dark:border-white/5 overflow-hidden min-w-0">
-          {/* Emotion / Style pills */}
-          <div className="flex items-center gap-1.5 overflow-x-auto max-w-full pb-1 no-scrollbar shrink min-w-0">
-            {presetPills.map((p, i) => (
-              <button
-                key={i}
-                type="button"
-                onClick={() => {
-                  if (p.text) {
-                    onChangeText(p.text);
-                  } else if (p.prompt) {
-                    onChangeText(p.prompt + text);
-                  }
-                }}
-                className="flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-zinc-100 dark:bg-zinc-800/80 hover:bg-zinc-200/80 dark:hover:bg-zinc-700 text-[10px] sm:text-[11px] font-bold tracking-wider text-zinc-700 dark:text-zinc-200 transition-all cursor-pointer active:scale-95 min-h-[36px] whitespace-nowrap shrink-0 border border-transparent dark:border-white/5"
-              >
-                <span>{p.label}</span>
-              </button>
-            ))}
-
-            <button
-              type="button"
-              onClick={handleEnhanceScript}
-              className="px-2.5 py-1.5 rounded-full bg-zinc-100 dark:bg-zinc-800/80 text-[10px] sm:text-[11px] font-bold text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200 transition-colors cursor-pointer min-h-[36px] shrink-0 border border-transparent dark:border-white/5"
-            >
-              +9
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={handleEnhanceScript}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-full border border-zinc-200/90 dark:border-white/10 hover:bg-zinc-50 dark:hover:bg-white/5 text-[10px] sm:text-[11px] font-bold tracking-wider uppercase text-zinc-700 dark:text-zinc-300 transition-all cursor-pointer shadow-2xs touch-target"
+          >
+            <Wand2 className="w-3.5 h-3.5 text-zinc-500 dark:text-zinc-400 shrink-0" />
+            <span className="hidden sm:inline">ENHANCE SCRIPT</span>
+            <span className="sm:hidden">ENHANCE</span>
+          </button>
 
           {/* Action buttons */}
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-            <button
-              type="button"
-              onClick={handleEnhanceScript}
-              className="flex items-center gap-1 px-2.5 sm:px-3 py-2 rounded-full border border-zinc-200/90 dark:border-white/10 hover:bg-zinc-50 dark:hover:bg-white/5 text-[10px] sm:text-[11px] font-bold tracking-wider uppercase text-zinc-700 dark:text-zinc-300 transition-all cursor-pointer shadow-2xs touch-target"
-            >
-              <Wand2 className="w-3.5 h-3.5 text-zinc-500 dark:text-zinc-400 shrink-0" />
-              <span className="hidden sm:inline">ENHANCE SCRIPT</span>
-              <span className="sm:hidden">ENHANCE</span>
-            </button>
 
             {!isPlaying ? (
               <button
