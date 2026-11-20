@@ -8,6 +8,7 @@
     "build": "vite build",
     "deploy": "npm run build && wrangler deploy",
     "lint": "oxlint",
+    "test": "node scripts/verify-fixes.mjs && node scripts/test-server.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

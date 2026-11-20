@@ -1,6 +1,3 @@
-# robots.txt for Voice Studio
-# https://voice.sshconnect.space/
-
 User-agent: *
 Allow: /
 
@@ -11,41 +8,14 @@ Allow: /
 User-agent: Bingbot
 Allow: /
 
-User-agent: DuckDuckBot
-Allow: /
-
-User-agent: Slurp
-Allow: /
-
-User-agent: Baiduspider
-Allow: /
-
-User-agent: YandexBot
-Allow: /
-
-# AI Search & Generative Engine Crawlers (GEO)
+# AI Crawlers
 User-agent: GPTBot
-Allow: /
-
-User-agent: ChatGPT-User
 Allow: /
 
 User-agent: ClaudeBot
 Allow: /
 
 User-agent: PerplexityBot
-Allow: /
-
-User-agent: Applebot
-Allow: /
-
-User-agent: Google-Extended
-Allow: /
-
-User-agent: Cohere-ai
-Allow: /
-
-User-agent: meta-externalagent
 Allow: /
 
 # Canonical XML Sitemap

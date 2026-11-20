@@ -13,7 +13,6 @@ import {
   Eye,
   Layers
 } from 'lucide-react';
-import Tesseract from 'tesseract.js';
 import { generateSampleImage } from '../utils/samplePresets';
 import { describeImageWithGemini, getStoredGeminiKey } from '../utils/geminiApi';
 
@@ -50,6 +49,7 @@ export default function ImageToVoice({
     setErrorMsg('');
 
     try {
+      const { default: Tesseract } = await import('tesseract.js');
       const result = await Tesseract.recognize(targetSrc, 'eng', {
         logger: (m) => {
           if (m.status === 'recognizing text') {

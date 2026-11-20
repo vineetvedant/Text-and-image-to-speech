@@ -236,24 +236,24 @@ export function generateSampleImage(type) {
     canvas.width = 700;
     canvas.height = 450;
     
-    // Elegant dark card
-    ctx.fillStyle = '#0F172A';
+    // Crisp high-contrast white card for reliable OCR scanning
+    ctx.fillStyle = '#FFFFFF';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     
     // Border
-    ctx.strokeStyle = '#38BDF8';
+    ctx.strokeStyle = '#0284C7';
     ctx.lineWidth = 4;
     ctx.strokeRect(30, 30, 640, 390);
     
     // Quote mark
-    ctx.font = 'bold 72px Georgia';
-    ctx.fillStyle = '#38BDF8';
+    ctx.font = 'bold 72px Georgia, serif';
+    ctx.fillStyle = '#0284C7';
     ctx.textAlign = 'left';
     ctx.fillText('“', 60, 110);
     
-    // Body Text
-    ctx.font = '24px Georgia';
-    ctx.fillStyle = '#F8FAFC';
+    // Body Text in high contrast black
+    ctx.font = 'bold 24px Georgia, serif';
+    ctx.fillStyle = '#0F172A';
     ctx.fillText('The most profound technologies are those', 60, 160);
     ctx.fillText('that disappear. They weave themselves into', 60, 205);
     ctx.fillText('the fabric of everyday life until they are', 60, 250);
@@ -261,10 +261,10 @@ export function generateSampleImage(type) {
     
     // Author
     ctx.font = 'bold 20px sans-serif';
-    ctx.fillStyle = '#38BDF8';
+    ctx.fillStyle = '#0284C7';
     ctx.fillText('— Mark Weiser', 60, 360);
     ctx.font = '15px sans-serif';
-    ctx.fillStyle = '#94A3B8';
+    ctx.fillStyle = '#475569';
     ctx.fillText('The Computer for the 21st Century (1991)', 220, 360);
     
     return canvas.toDataURL('image/png');

@@ -13,12 +13,14 @@ import {
   Languages
 } from 'lucide-react';
 
-export default function SeoContentSection({ onSelectTab }) {
+export default function SeoContentSection({ activeTab = 'text', onSelectTab }) {
   const [openFaqIndex, setOpenFaqIndex] = useState(0);
 
   const toggleFaq = (index) => {
     setOpenFaqIndex(openFaqIndex === index ? -1 : index);
   };
+
+  const isImageMode = activeTab === 'image';
 
   const faqs = [
     {
@@ -28,6 +30,22 @@ export default function SeoContentSection({ onSelectTab }) {
     {
       question: "How do I convert an image or screenshot into spoken audio?",
       answer: "Simply switch to the 'Image to Voice' mode and drag and drop any image (PNG, JPG, WebP), paste a screenshot from your clipboard (Ctrl+V), or take a photo using your mobile camera. Our built-in Tesseract.js optical character recognition engine instantly extracts the text on your device, allowing you to edit the script and immediately tap 'Speak Extracted Text'."
+    },
+    {
+      question: "How to read screenshots, receipts, or handwritten notes aloud?",
+      answer: "Upload or paste any screenshot, store receipt, document scan, or handwritten note directly into the Image to Voice dropzone. The in-browser OCR engine scans glyphs in real time with high accuracy, automatically formats the recognized script, and enables instantaneous one-click voice playback with synchronized speed and pitch control."
+    },
+    {
+      question: "What is the difference between offline browser voices and Gemini AI scene description?",
+      answer: "Offline browser voices use your device's local Web Speech API synthesis engine, operating 100% client-side with zero data egress and zero latency. Optional Gemini AI Multimodal Vision (enabled via your own BYOK API key) goes beyond raw OCR text: it interprets complex scenes, visual layout, diagrams, infographic charts, and ambient photo settings into expressive, natural spoken narrative prose."
+    },
+    {
+      question: "How does Voice Studio support dyslexia and accessibility reading?",
+      answer: "Voice Studio incorporates accessibility-first design: high-contrast dark and light modes, adjustable typography, synchronized word-by-word kinetic teleprompter tracking that highlights active syllables, and granular vocal rate controls (0.5x to 2.0x). This multisensory visual-audio reinforcement significantly improves reading comprehension and retention for neurodivergent individuals and language learners."
+    },
+    {
+      question: "How does BYOK (Bring Your Own Key) Gemini API key privacy work?",
+      answer: "Your privacy is paramount. When you provide a Google Gemini API key for AI Multimodal Vision, the secret key is saved exclusively in your personal browser's localStorage. It is never transmitted to or logged on sshconnect servers. API requests travel directly and securely from your browser sandbox straight to Google's official Gemini endpoint."
     },
     {
       question: "Does this tool work offline or store my text and images on a server?",
@@ -104,11 +122,15 @@ export default function SeoContentSection({ onSelectTab }) {
         </div>
 
         <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight leading-tight">
-          Free Online Text to Speech, Image to Voice & OCR Reader
+          {isImageMode
+            ? "Image to Speech & Free Online OCR Reader — Read Photos"
+            : "Free Online Text to Speech Reader — Private, No Signup"}
         </h1>
 
         <p className="text-xs sm:text-sm lg:text-base text-zinc-600 dark:text-zinc-400 leading-relaxed font-normal">
-          Convert any written script to natural sounding voice, extract text from screenshots and photos using client-side OCR, and read along with a synchronized kinetic teleprompter. Zero server uploads, zero cost, and no sign-up required.
+          {isImageMode
+            ? "Upload or paste any PNG, JPG, or WebP image to extract text with instant browser OCR and listen aloud. Free, private, with optional Gemini AI scene reading."
+            : "Convert text to natural speech directly in your browser with speed, pitch, and intonation controls. 100% client-side, unlimited, and free with no account."}
         </p>
 
         {/* Quick Nav Anchors */}

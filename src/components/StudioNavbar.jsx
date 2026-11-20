@@ -17,9 +17,9 @@ export default function StudioNavbar({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="w-full bg-white dark:bg-[#121215] border-b border-zinc-200/80 dark:border-white/8 select-none z-30 transition-colors duration-200">
+    <header className="w-full bg-white dark:bg-[#121215] border-b border-zinc-200/80 dark:border-white/8 select-none z-50 relative transition-colors duration-200">
       {/* Main Top Bar */}
-      <div className="px-2 sm:px-6 lg:px-8 py-2 sm:py-3.5 flex items-center justify-between gap-1 sm:gap-4 max-w-full overflow-hidden">
+      <div className="px-2 sm:px-6 lg:px-8 py-2 sm:py-3.5 flex items-center justify-between gap-1 sm:gap-4 max-w-full overflow-visible relative">
         {/* Brand / Logo */}
         <a
           href="https://sshconnect.space/"
@@ -70,7 +70,7 @@ export default function StudioNavbar({
         </div>
 
         {/* Center-Right (Desktop Only): Multi-Language Selector */}
-        <div className="hidden lg:flex items-center">
+        <div className="hidden lg:flex items-center relative z-50">
           {currentLanguage && onSelectLanguage && (
             <LanguageSelector
               currentLanguage={currentLanguage}
@@ -121,12 +121,12 @@ export default function StudioNavbar({
             </a>
           </div>
 
-          {/* Dark / Light Mode Switcher Button (Desktop & Mobile) */}
+          {/* Dark / Light Mode Switcher Button (Desktop: visible >= lg; mobile: inside drawer) */}
           {onToggleTheme && (
             <button
               type="button"
               onClick={onToggleTheme}
-              className="p-2 rounded-xl text-zinc-500 dark:text-zinc-400 hover:text-amber-500 dark:hover:text-amber-300 hover:bg-zinc-100 dark:hover:bg-white/5 transition-all duration-200 hover:-translate-y-0.5 cursor-pointer touch-target"
+              className="hidden lg:flex p-2 rounded-xl text-zinc-500 dark:text-zinc-400 hover:text-amber-500 dark:hover:text-amber-300 hover:bg-zinc-100 dark:hover:bg-white/5 transition-all duration-200 hover:-translate-y-0.5 cursor-pointer touch-target"
               title={theme === 'dark' ? 'Switch to Light mode' : 'Switch to Dark mode'}
               aria-label="Toggle theme"
             >
@@ -138,12 +138,12 @@ export default function StudioNavbar({
             </button>
           )}
 
-          {/* About / Bio Button */}
+          {/* About / Bio Button (Desktop: visible >= lg; mobile: inside drawer) */}
           {onOpenBio && (
             <button
               type="button"
               onClick={onOpenBio}
-              className="p-2 rounded-xl text-zinc-500 dark:text-zinc-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-zinc-100 dark:hover:bg-white/5 transition-all duration-200 hover:-translate-y-0.5 cursor-pointer touch-target"
+              className="hidden lg:flex p-2 rounded-xl text-zinc-500 dark:text-zinc-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-zinc-100 dark:hover:bg-white/5 transition-all duration-200 hover:-translate-y-0.5 cursor-pointer touch-target"
               title="About Project & Creator Bio"
               aria-label="About and Bio"
             >
@@ -151,12 +151,12 @@ export default function StudioNavbar({
             </button>
           )}
 
-          {/* Settings Button (Visible on screens >= sm) */}
+          {/* Settings Button (Desktop: visible >= lg; mobile: inside drawer) */}
           {onOpenSettings && (
             <button
               type="button"
               onClick={onOpenSettings}
-              className="hidden sm:flex p-2 rounded-xl text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-white/5 transition-all duration-200 hover:-translate-y-0.5 cursor-pointer touch-target"
+              className="hidden lg:flex p-2 rounded-xl text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-white/5 transition-all duration-200 hover:-translate-y-0.5 cursor-pointer touch-target"
               title="Settings & API Key"
               aria-label="Settings"
             >
@@ -164,15 +164,15 @@ export default function StudioNavbar({
             </button>
           )}
 
-          {/* New Project / Play Pill */}
+          {/* Primary Speak / Play Pill */}
           <button
             type="button"
             onClick={onNewProject}
             className="flex items-center gap-1.5 sm:gap-2 bg-[#18181b] dark:bg-white hover:bg-black dark:hover:bg-zinc-100 text-white dark:text-zinc-950 px-3 sm:px-4 py-2 rounded-full text-xs font-semibold tracking-wide uppercase transition-all shadow-sm active:scale-95 cursor-pointer shrink-0 min-h-[40px]"
-            title={isPlaying ? 'Synthesizing voice...' : 'Speak / New Project'}
+            title={isPlaying ? 'Synthesizing voice...' : 'Speak'}
           >
-            <Play className="w-3.5 h-3.5 fill-current sm:hidden" />
-            <span className="hidden sm:inline">{isPlaying ? 'Speaking...' : 'New Project'}</span>
+            <Play className="w-3.5 h-3.5 fill-current" />
+            <span>{isPlaying ? 'Speaking...' : 'Speak'}</span>
             <div className="hidden sm:flex items-center gap-0.5">
               <span className={`w-0.5 h-2.5 bg-white dark:bg-zinc-950 rounded-full ${isPlaying ? 'animate-pulse' : ''}`} />
               <span className={`w-0.5 h-4 bg-white dark:bg-zinc-950 rounded-full ${isPlaying ? 'animate-bounce' : ''}`} />

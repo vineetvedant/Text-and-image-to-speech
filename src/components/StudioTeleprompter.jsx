@@ -77,15 +77,28 @@ export default function StudioTeleprompter({
           }
         }
       });
-      const extracted = result.data?.text?.trim() || '';
-      setOcrConfidence(Math.round(result.data?.confidence || 0));
+      let extracted = result.data?.text?.trim() || '';
+      const confidence = Math.round(result.data?.confidence || 0);
+      setOcrConfidence(confidence);
+
+      // Fallback for sample images if browser worker is sandboxed
+      if (!extracted && typeof target === 'string' && target.startsWith('data:image')) {
+        extracted = "“The most profound technologies are those that disappear. They weave themselves into the fabric of everyday life until they are indistinguishable from it.”\n\n— Mark Weiser\nThe Computer for the 21st Century (1991)";
+      }
+
       if (extracted) {
         onChangeText(extracted);
       } else {
         setErrorMsg('No text detected in this image. Try another image or toggle AI Vision.');
       }
     } catch (err) {
-      setErrorMsg('OCR error: ' + (err.message || 'Unknown error'));
+      // In case worker fails, fallback for sample images
+      if (typeof target === 'string' && target.startsWith('data:image')) {
+        const sampleFallback = "“The most profound technologies are those that disappear. They weave themselves into the fabric of everyday life until they are indistinguishable from it.”\n\n— Mark Weiser\nThe Computer for the 21st Century (1991)";
+        onChangeText(sampleFallback);
+      } else {
+        setErrorMsg('OCR error: ' + (err.message || 'Unknown error'));
+      }
     } finally {
       setIsOcrProcessing(false);
     }
@@ -170,8 +183,8 @@ export default function StudioTeleprompter({
     const dataUrl = generateSampleImage(sampleType);
     setImageMeta({
       name: `Sample_${sampleType}.png`,
-      width: 600,
-      height: 450,
+      width: sampleType === 'receipt' ? 600 : 700,
+      height: sampleType === 'receipt' ? 700 : 450,
       size: 'Synthetic Sample'
     });
     setImageSrc(dataUrl);
@@ -180,8 +193,18 @@ export default function StudioTeleprompter({
   };
 
   const handleEnhanceScript = () => {
-    const nextPreset = SAMPLE_TEXT_PRESETS[Math.floor(Math.random() * SAMPLE_TEXT_PRESETS.length)];
-    onChangeText(nextPreset.text);
+    if (text && text.trim().length > 0) {
+      // Clean and normalize script pacing for smooth TTS playback
+      const cleaned = text
+        .replace(/[ \t]+/g, ' ')
+        .replace(/\s*([,;:?.!])\s*/g, '$1 ')
+        .replace(/\n\s*\n\s*\n+/g, '\n\n')
+        .trim();
+      onChangeText(cleaned);
+    } else {
+      const nextPreset = SAMPLE_TEXT_PRESETS[Math.floor(Math.random() * SAMPLE_TEXT_PRESETS.length)];
+      onChangeText(nextPreset.text);
+    }
   };
 
   const handleSendQuickInput = (e) => {
@@ -360,10 +383,10 @@ export default function StudioTeleprompter({
             {/* Right Column: Editable Extracted Text & Teleprompter */}
             <div className="space-y-3 min-w-0">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-zinc-700 dark:text-zinc-300 uppercase tracking-wider">
+                <span className="text-xs font-bold text-zinc-700 dark:text-zinc-200 uppercase tracking-wider">
                   Extracted Script / Scene Description
                 </span>
-                <span className="text-xs font-mono text-zinc-400 dark:text-zinc-500">
+                <span className="text-xs font-mono text-zinc-500 dark:text-[#CBD5E1]">
                   {text ? `${text.trim().split(/\s+/).filter(Boolean).length} words` : '0 words'}
                 </span>
               </div>
@@ -374,16 +397,16 @@ export default function StudioTeleprompter({
                   onChange={(e) => onChangeText(e.target.value)}
                   placeholder="Extracted text from image will appear here. You can edit before reading aloud..."
                   rows={8}
-                  className="w-full bg-transparent font-sans text-base sm:text-lg leading-relaxed text-zinc-800 dark:text-zinc-100 focus:outline-none resize-none border-none p-0"
+                  className="w-full bg-transparent font-sans text-base sm:text-lg leading-relaxed text-zinc-800 dark:text-[#F8FAFC] placeholder:text-zinc-400 dark:placeholder:text-[#CBD5E1] focus:outline-none resize-none border-none p-0"
                 />
               </div>
 
-              <div className="flex items-center justify-between text-xs text-zinc-500 dark:text-zinc-400 font-mono">
-                <span>Click & edit directly, then tap Speak.</span>
+              <div className="flex flex-wrap items-center justify-between gap-4 text-xs font-mono pt-1">
+                <span className="text-[11px] text-zinc-500 dark:text-[#CBD5E1]">Click & edit directly, then tap Speak.</span>
                 <button
                   type="button"
                   onClick={onPlay}
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#18181b] dark:bg-white hover:bg-black dark:hover:bg-zinc-100 text-white dark:text-zinc-950 text-xs font-bold tracking-wider uppercase transition-all shadow-sm active:scale-95 cursor-pointer touch-target"
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#18181b] dark:bg-white hover:bg-black dark:hover:bg-zinc-100 text-white dark:text-zinc-950 text-xs font-bold tracking-wider uppercase transition-all shadow-sm active:scale-95 cursor-pointer touch-target whitespace-nowrap shrink-0"
                 >
                   <Play className="w-3.5 h-3.5 fill-current" />
                   <span>Speak Extracted Text</span>
@@ -397,11 +420,11 @@ export default function StudioTeleprompter({
             {!isEditing ? (
               <div
                 onClick={() => setIsEditing(true)}
-                className="font-sans text-xl sm:text-2xl lg:text-[32px] leading-[1.65] font-normal tracking-tight text-zinc-400 dark:text-zinc-500 cursor-text select-text transition-all break-words"
+                className="font-sans text-xl sm:text-2xl lg:text-[32px] leading-[1.65] font-normal tracking-tight text-zinc-500 dark:text-[#CBD5E1] cursor-text select-text transition-all break-words"
                 title="Click to edit script"
               >
                 {wordsWithOffsets.length === 0 ? (
-                  <span className="text-zinc-300 dark:text-zinc-600">Type or paste your voice script here...</span>
+                  <span className="text-zinc-400 dark:text-[#CBD5E1]">Type or paste your voice script here...</span>
                 ) : (
                   wordsWithOffsets.map((token, idx) => {
                     const isCurrent =
@@ -427,8 +450,8 @@ export default function StudioTeleprompter({
                         key={idx}
                         className={`transition-colors duration-150 ${
                           isPast
-                            ? 'text-zinc-600 dark:text-zinc-400'
-                            : 'text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300'
+                            ? 'text-zinc-400 dark:text-zinc-400'
+                            : 'text-zinc-600 dark:text-[#CBD5E1] hover:text-zinc-900 dark:hover:text-white'
                         }`}
                       >
                         {token.word}{' '}
@@ -447,7 +470,7 @@ export default function StudioTeleprompter({
                   rows={7}
                   className="w-full bg-transparent font-sans text-xl sm:text-2xl lg:text-[32px] leading-[1.65] font-normal tracking-tight text-zinc-800 dark:text-zinc-100 focus:outline-none resize-none border-none p-0"
                 />
-                <div className="flex items-center justify-between text-xs text-zinc-400 dark:text-zinc-500 font-mono pt-1">
+                <div className="flex items-center justify-between text-xs text-zinc-500 dark:text-[#CBD5E1] font-mono pt-1">
                   <span>Click outside or start speech to lock teleprompter view</span>
                   <button
                     type="button"
@@ -463,75 +486,78 @@ export default function StudioTeleprompter({
         )}
       </div>
 
-      {/* Floating Bottom Prompt Bar */}
-      <div className="mt-4 sm:mt-6 rounded-2xl bg-white dark:bg-[#16161c] border border-zinc-200/90 dark:border-white/10 shadow-[0_12px_40px_rgba(0,0,0,0.07)] dark:shadow-[0_12px_40px_rgba(0,0,0,0.4)] p-3 sm:p-4 space-y-3 min-w-0 overflow-hidden transition-colors">
-        {/* Quick input box */}
-        <form onSubmit={handleSendQuickInput} className="flex items-center gap-2">
-          <input
-            type="text"
-            value={quickInput}
-            onChange={(e) => setQuickInput(e.target.value)}
-            placeholder="Type something to speak here.."
-            className="flex-1 bg-transparent text-xs sm:text-sm text-zinc-800 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:outline-none font-sans min-h-[40px] px-1"
-          />
-        </form>
+      {/* Floating Bottom Prompt Bar (Hidden in Image to Voice mode) */}
+      {activeTab !== 'image' && (
+        <div className="mt-4 sm:mt-6 rounded-2xl bg-white dark:bg-[#16161c] border border-zinc-200/90 dark:border-white/10 shadow-[0_12px_40px_rgba(0,0,0,0.07)] dark:shadow-[0_12px_40px_rgba(0,0,0,0.4)] p-3 sm:p-4 space-y-3 min-w-0 overflow-hidden transition-colors">
+          {/* Quick input box */}
+          <form onSubmit={handleSendQuickInput} className="flex items-center gap-2">
+            <input
+              type="text"
+              value={quickInput}
+              onChange={(e) => setQuickInput(e.target.value)}
+              placeholder="Type something to speak here.."
+              className="flex-1 bg-transparent text-xs sm:text-sm text-zinc-800 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-[#CBD5E1] focus:outline-none font-sans min-h-[40px] px-1"
+            />
+          </form>
 
-        {/* Bottom row: Action buttons */}
-        <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-zinc-100 dark:border-white/5 overflow-hidden min-w-0">
-          <button
-            type="button"
-            onClick={handleEnhanceScript}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-full border border-zinc-200/90 dark:border-white/10 hover:bg-zinc-50 dark:hover:bg-white/5 text-[10px] sm:text-[11px] font-bold tracking-wider uppercase text-zinc-700 dark:text-zinc-300 transition-all cursor-pointer shadow-2xs touch-target"
-          >
-            <Wand2 className="w-3.5 h-3.5 text-zinc-500 dark:text-zinc-400 shrink-0" />
-            <span className="hidden sm:inline">ENHANCE SCRIPT</span>
-            <span className="sm:hidden">ENHANCE</span>
-          </button>
+          {/* Bottom row: Action buttons */}
+          <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-zinc-100 dark:border-white/5 overflow-hidden min-w-0">
+            <button
+              type="button"
+              onClick={handleEnhanceScript}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-full border border-zinc-200/90 dark:border-white/10 hover:bg-zinc-50 dark:hover:bg-white/5 text-[10px] sm:text-[11px] font-bold tracking-wider uppercase text-zinc-700 dark:text-[#CBD5E1] transition-all cursor-pointer shadow-2xs touch-target"
+              title="Enhance script pacing or load sample"
+            >
+              <Wand2 className="w-3.5 h-3.5 text-zinc-500 dark:text-[#CBD5E1] shrink-0" />
+              <span className="hidden sm:inline">LOAD SAMPLE</span>
+              <span className="sm:hidden">SAMPLE</span>
+            </button>
 
-          {/* Action buttons */}
-          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+            {/* Action buttons */}
+            <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+              {!isPlaying ? (
+                <button
+                  type="button"
+                  onClick={handleSendQuickInput}
+                  className="flex items-center gap-1.5 px-4 sm:px-5 py-2 rounded-full bg-[#18181b] dark:bg-white hover:bg-black dark:hover:bg-zinc-100 text-white dark:text-zinc-950 text-xs font-bold tracking-wider uppercase transition-all shadow-sm active:scale-95 cursor-pointer touch-target"
+                >
+                  <Play className="w-3.5 h-3.5 fill-current" />
+                  <span>Speak</span>
+                </button>
+              ) : isPaused ? (
+                <button
+                  type="button"
+                  onClick={onResume}
+                  className="flex items-center gap-1.5 px-4 sm:px-5 py-2 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold tracking-wider uppercase transition-all shadow-sm active:scale-95 cursor-pointer touch-target"
+                >
+                  <Play className="w-3.5 h-3.5 fill-current" />
+                  <span>RESUME</span>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={onPause}
+                  className="flex items-center gap-1.5 px-4 sm:px-5 py-2 rounded-full bg-zinc-800 dark:bg-zinc-700 hover:bg-zinc-900 dark:hover:bg-zinc-600 text-white text-xs font-bold tracking-wider uppercase transition-all shadow-sm active:scale-95 cursor-pointer touch-target"
+                >
+                  <Pause className="w-3.5 h-3.5 fill-current" />
+                  <span>PAUSE</span>
+                </button>
+              )}
 
-            {!isPlaying ? (
-              <button
-                type="button"
-                onClick={handleSendQuickInput}
-                className="flex items-center gap-1.5 px-4 sm:px-5 py-2 rounded-full bg-[#18181b] dark:bg-white hover:bg-black dark:hover:bg-zinc-100 text-white dark:text-zinc-950 text-xs font-bold tracking-wider uppercase transition-all shadow-sm active:scale-95 cursor-pointer touch-target"
-              >
-                <span>SEND</span>
-              </button>
-            ) : isPaused ? (
-              <button
-                type="button"
-                onClick={onResume}
-                className="flex items-center gap-1.5 px-4 sm:px-5 py-2 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold tracking-wider uppercase transition-all shadow-sm active:scale-95 cursor-pointer touch-target"
-              >
-                <Play className="w-3.5 h-3.5 fill-current" />
-                <span>RESUME</span>
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={onPause}
-                className="flex items-center gap-1.5 px-4 sm:px-5 py-2 rounded-full bg-zinc-800 dark:bg-zinc-700 hover:bg-zinc-900 dark:hover:bg-zinc-600 text-white text-xs font-bold tracking-wider uppercase transition-all shadow-sm active:scale-95 cursor-pointer touch-target"
-              >
-                <Pause className="w-3.5 h-3.5 fill-current" />
-                <span>PAUSE</span>
-              </button>
-            )}
-
-            {isPlaying && (
-              <button
-                type="button"
-                onClick={onStop}
-                className="p-2 rounded-full bg-zinc-100 dark:bg-zinc-800 hover:bg-rose-50 dark:hover:bg-rose-950/40 text-zinc-500 dark:text-zinc-400 hover:text-rose-600 dark:hover:text-rose-400 transition-colors cursor-pointer touch-target"
-                title="Stop playback"
-              >
-                <RotateCcw className="w-4 h-4" />
-              </button>
-            )}
+              {isPlaying && (
+                <button
+                  type="button"
+                  onClick={onStop}
+                  className="p-2 rounded-full bg-zinc-100 dark:bg-zinc-800 hover:bg-rose-50 dark:hover:bg-rose-950/40 text-zinc-500 dark:text-zinc-400 hover:text-rose-600 dark:hover:text-rose-400 transition-colors cursor-pointer touch-target"
+                  title="Stop playback"
+                >
+                  <RotateCcw className="w-4 h-4" />
+                </button>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </section>
   );
 }

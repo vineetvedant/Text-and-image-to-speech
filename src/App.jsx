@@ -60,9 +60,10 @@ export default function App() {
   const [text, setText] = useState(SUPPORTED_LANGUAGES[0].sampleText);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [isBioOpen, setIsBioOpen] = useState(true);
+  const [isBioOpen, setIsBioOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [isSpeechSupported] = useState(() => speechController.isSupported());
+  const [voicesLoaded, setVoicesLoaded] = useState(() => !speechController.isSupported());
 
   // Dark/Light Theme State
   const [theme, setTheme] = useState(() => {
@@ -132,19 +133,29 @@ export default function App() {
     if (!isSpeechSupported) return;
 
     speechController.loadVoicesSafe((availableVoices) => {
+      setVoicesLoaded(true);
       if (availableVoices && availableVoices.length > 0) {
         setVoices(availableVoices);
         setSelectedVoice((prev) => {
-          if (prev) return prev;
+          if (prev) {
+            // Keep current voice if it matches the current language
+            const langPrefix = currentLanguage.code.split('-')[0].toLowerCase();
+            if (prev.lang && prev.lang.toLowerCase().startsWith(langPrefix)) {
+              return prev;
+            }
+          }
+          const langCodeLower = currentLanguage.code.toLowerCase().replace('_', '-');
           const langPrefix = currentLanguage.code.split('-')[0].toLowerCase();
           return (
-            availableVoices.find(v => v.lang.toLowerCase().replace('_', '-').startsWith(currentLanguage.code.toLowerCase())) ||
+            availableVoices.find(v => v.lang.toLowerCase().replace('_', '-') === langCodeLower) ||
             availableVoices.find(v => v.lang.toLowerCase().startsWith(langPrefix)) ||
-            availableVoices.find(v => v.lang.startsWith('en')) ||
+            availableVoices.find(v => v.lang.toLowerCase().startsWith('en')) ||
             availableVoices.find(v => v.default) ||
             availableVoices[0]
           );
         });
+      } else {
+        setVoices([]);
       }
     });
   }, [currentLanguage, isSpeechSupported]);
@@ -155,16 +166,18 @@ export default function App() {
     setText(lang.sampleText);
 
     // Auto-switch voice to match selected language
+    const langCodeLower = lang.code.toLowerCase().replace('_', '-');
     const langPrefix = lang.code.split('-')[0].toLowerCase();
     const matchingVoice =
-      voices.find(v => v.lang.toLowerCase().replace('_', '-').startsWith(lang.code.toLowerCase())) ||
-      voices.find(v => v.lang.toLowerCase().startsWith(langPrefix));
+      voices.find(v => v.lang.toLowerCase().replace('_', '-') === langCodeLower) ||
+      voices.find(v => v.lang.toLowerCase().replace('_', '-').startsWith(langPrefix)) ||
+      null;
 
     if (matchingVoice) {
       setSelectedVoice(matchingVoice);
-      showToast(`Switched to ${lang.nativeName} (${lang.name})`);
+      showToast(`Switched language to ${lang.nativeName} (${lang.name})`);
     } else {
-      showToast(`Switched to ${lang.nativeName}. (Using closest installed voice engine).`);
+      showToast(`Language set to ${lang.nativeName} (${lang.name}). Speech engine calibrated.`);
     }
   };
 
@@ -233,6 +246,7 @@ export default function App() {
     speechController.speak({
       text,
       voice: selectedVoice,
+      lang: currentLanguage.code,
       rate,
       pitch,
       volume,
@@ -252,17 +266,24 @@ export default function App() {
         setIsPaused(false);
       },
       onError: (err) => {
+        if (err?.error === 'canceled' || err?.error === 'interrupted') {
+          return;
+        }
         console.warn('Speech playback issue:', err);
         setIsPlaying(false);
         setIsPaused(false);
         setCurrentCharIndex(-1);
-        showToast('Playback interrupted. Tap Speak to restart.');
+        if (err?.error === 'not-allowed') {
+          showToast('Audio playback permission denied. Tap to allow.');
+        } else if (err?.error) {
+          showToast(`Playback issue (${err.error}). Tap Speak to restart.`);
+        }
       },
       onBoundary: ({ charIndex }) => {
         setCurrentCharIndex(charIndex);
       }
     });
-  }, [text, selectedVoice, rate, pitch, volume, handleStop, addToHistory]);
+  }, [text, selectedVoice, currentLanguage, rate, pitch, volume, handleStop, addToHistory]);
 
   return (
     <div className="min-h-[100dvh] w-full bg-[#e5e5ea] dark:bg-[#09090b] py-0 sm:py-3 lg:py-6 px-0 sm:px-3 lg:px-6 flex flex-col justify-start items-center font-sans antialiased overflow-x-hidden transition-colors duration-200">
@@ -329,6 +350,8 @@ export default function App() {
           {/* Right Inspector Panel */}
           <StudioRightInspector
             voices={voices}
+            voicesLoaded={voicesLoaded}
+            currentLanguage={currentLanguage}
             selectedVoice={selectedVoice}
             onSelectVoice={setSelectedVoice}
             rate={rate}
@@ -341,7 +364,7 @@ export default function App() {
         </div>
 
         {/* High-Intent On-Page SEO Section (Below the fold) */}
-        <SeoContentSection onSelectTab={handleSelectTab} />
+        <SeoContentSection activeTab={activeTab} onSelectTab={handleSelectTab} />
 
         {/* Minimalist Studio Footer with Personal Branding */}
         <StudioFooter onOpenBio={() => setIsBioOpen(true)} />

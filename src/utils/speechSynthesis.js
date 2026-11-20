@@ -92,14 +92,24 @@ class SpeechController {
       return;
     }
 
-    const initial = this.synth.getVoices();
-    if (initial && initial.length > 0) {
-      callback?.(initial);
-      return;
+    let resolved = false;
+    const trigger = () => {
+      const v = this.synth.getVoices() || [];
+      if (v.length > 0) {
+        resolved = true;
+        callback?.(v);
+        return true;
+      }
+      return false;
+    };
+
+    // If voices already available synchronously (Safari/Firefox)
+    if (trigger()) {
+      // Still listen for voiceschanged in case Chromium updates with network voices later
     }
 
     let attempts = 0;
-    const maxAttempts = 12;
+    const maxAttempts = 10;
 
     if (this.retryVoiceTimer) {
       clearInterval(this.retryVoiceTimer);
@@ -107,35 +117,34 @@ class SpeechController {
 
     this.retryVoiceTimer = setInterval(() => {
       attempts++;
-      const current = this.synth.getVoices();
-      if (current && current.length > 0) {
+      if (trigger() || attempts >= maxAttempts) {
         clearInterval(this.retryVoiceTimer);
         this.retryVoiceTimer = null;
-        callback?.(current);
-      } else if (attempts >= maxAttempts) {
-        clearInterval(this.retryVoiceTimer);
-        this.retryVoiceTimer = null;
-        callback?.([]);
+        if (!resolved) {
+          callback?.(this.synth.getVoices() || []);
+        }
       }
     }, 200);
 
-    const prevOnVoicesChanged = this.synth.onvoiceschanged;
-    this.synth.onvoiceschanged = (e) => {
+    const onVoicesChangedHandler = () => {
       if (this.retryVoiceTimer) {
         clearInterval(this.retryVoiceTimer);
         this.retryVoiceTimer = null;
       }
-      const loaded = this.synth.getVoices();
+      const loaded = this.synth.getVoices() || [];
       callback?.(loaded);
-      if (typeof prevOnVoicesChanged === 'function') {
-        prevOnVoicesChanged(e);
-      }
     };
+
+    this.synth.onvoiceschanged = onVoicesChangedHandler;
+    if (typeof window !== 'undefined' && window.speechSynthesis?.addEventListener) {
+      window.speechSynthesis.addEventListener('voiceschanged', onVoicesChangedHandler);
+    }
   }
 
   speak({
     text,
     voice,
+    lang,
     rate = 1,
     pitch = 1,
     volume = 1,
@@ -151,7 +160,8 @@ class SpeechController {
       return;
     }
 
-    // Stop previous utterances
+    const wasSpeaking = this.synth.speaking || this.synth.pending;
+    // Stop previous utterances cleanly
     this.stop();
 
     if (!text || !text.trim()) {
@@ -168,6 +178,7 @@ class SpeechController {
     this.currentOptions = {
       text,
       voice,
+      lang: lang || voice?.lang || 'en-US',
       rate: Math.max(0.1, Math.min(rate, 2.5)),
       pitch: Math.max(0.1, Math.min(pitch, 2.0)),
       volume: Math.max(0, Math.min(volume, 1.0)),
@@ -184,7 +195,16 @@ class SpeechController {
       return;
     }
 
-    this.playNextChunk();
+    // If Chromium was speaking, delay slightly (40ms) after cancel() so it doesn't abort the new utterance
+    if (wasSpeaking) {
+      setTimeout(() => {
+        if (!this.isStopped) {
+          this.playNextChunk();
+        }
+      }, 40);
+    } else {
+      this.playNextChunk();
+    }
   }
 
   playNextChunk() {
@@ -199,6 +219,15 @@ class SpeechController {
     const chunk = this.chunks[this.currentChunkIndex];
     const utterance = new SpeechSynthesisUtterance(chunk.text);
     this.currentUtterance = utterance;
+
+    // Crucial for multilingual support: set the speech language on the utterance
+    if (this.currentOptions.lang) {
+      utterance.lang = this.currentOptions.lang;
+    } else if (this.currentOptions.voice?.lang) {
+      utterance.lang = this.currentOptions.voice.lang;
+    } else {
+      utterance.lang = 'en-US';
+    }
 
     if (this.currentOptions.voice) {
       utterance.voice = this.currentOptions.voice;
@@ -251,8 +280,8 @@ class SpeechController {
 
     utterance.onerror = (event) => {
       this.stopKeepAlive();
-      // Ignore user cancellations
-      if (event.error === 'canceled' || event.error === 'interrupted') {
+      // Ignore user cancellations and intentional interrupts
+      if (this.isStopped || event.error === 'canceled' || event.error === 'interrupted') {
         return;
       }
       this.cleanup();
